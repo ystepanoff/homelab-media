@@ -1,0 +1,11 @@
+services:
+  rtorrent:
+    container_name: rtorrent
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /mnt/torrents/config:/config:ro
+      - /mnt/torrents/session:/session
+      - /mnt/torrents/watch:/watch
+      - /mnt/torrents/files:/files
+
