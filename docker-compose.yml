@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   rtorrent:
     build:
@@ -10,4 +12,3 @@ services:
       - /mnt/torrents/session:/session
       - /mnt/torrents/watch:/watch
       - /mnt/torrents/files:/files
-
