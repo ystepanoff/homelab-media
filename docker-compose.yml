@@ -1,6 +1,7 @@
 services:
   rtorrent:
     build:
+      context: ./torrents
     container_name: rtorrent
     network_mode: host
     restart: unless-stopped
