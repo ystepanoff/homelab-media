@@ -12,3 +12,4 @@ services:
       - /mnt/torrents/session:/session
       - /mnt/torrents/watch:/watch
       - /mnt/torrents/files:/files
+      - /mnt/torrents/logs:/logs
