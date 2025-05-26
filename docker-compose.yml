@@ -25,7 +25,7 @@ services:
 
     volumes:
       - /mnt/torrents/config:/config:ro
-      - /mnt/torrents/config/rtorrent/.rtorrent.rc:/data/rtorrent/.rtorrent.rc
+      - /mnt/torrents/config/rtorrent/:/data/rtorrent/
       - ./rtorrent/session:/session
       - /mnt/torrents/watch:/watch
       - /mnt/torrents/files:/files
