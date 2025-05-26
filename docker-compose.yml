@@ -3,7 +3,7 @@ version: "3.9"
 services:
   rtorrent:
     build:
-      context: ./torrents
+      context: .
     container_name: rtorrent
     network_mode: host
     restart: unless-stopped
