@@ -78,9 +78,7 @@ services:
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
-      PUID: $(id -u)
-      PGID: $(id -g)
-
+    user: "1000:1000"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
