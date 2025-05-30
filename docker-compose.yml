@@ -42,7 +42,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
 
   jellyfin:
-    image: jellyfin/jellyfin:latest           # multi-arch image: works on RPi-5 (ARM64)
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     restart: unless-stopped
     networks: [ proxy ]
@@ -51,7 +51,7 @@ services:
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - ./jellyfin:/config
+      - jellyfin:/config
       - /mnt/torrents/files:/media
     devices:
       - /dev/dri:/dev/dri
@@ -73,8 +73,8 @@ services:
     networks: [ proxy ]
     volumes:
       - /mnt/torrents:/srv:rw
-      - ./filebrowser/.filebrowser.json:/.filebrowser.json
-      - ./filebrowser/filebrowser.db:/database.db
+      - filebrowser:/.filebrowser.json:/.filebrowser.json
+      - filebrowser:/filebrowser.db:/database.db
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
@@ -91,4 +91,10 @@ services:
 
 networks:
   proxy:
+    external: true
+
+volumes:
+  jellyfin:
+    external: true
+  filebrowser:
     external: true
