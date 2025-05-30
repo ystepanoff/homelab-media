@@ -75,6 +75,7 @@ services:
     volumes:
       - /mnt/torrents:/srv
       - ./filebrowser/.filebrowser.json:/.filebrowser.json
+      - ./filebrowser/filebrowser.db:/database.db
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
