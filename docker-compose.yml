@@ -78,8 +78,8 @@ services:
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
-      PUID: $(id -u)
-      PGID: $(id -g)
+      PUID: ${UID}
+      PGID: ${GID}
     user: "${UID}:${GID}"
     labels:
       - "traefik.enable=true"
