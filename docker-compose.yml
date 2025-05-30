@@ -80,6 +80,7 @@ services:
       FB_BASEURL: /files
       PUID: $(id -u)
       PGID: $(id -g)
+    user: "${UID}:${GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
