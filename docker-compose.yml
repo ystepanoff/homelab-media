@@ -47,11 +47,11 @@ services:
     restart: unless-stopped
     networks: [ proxy ]
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Europe/London
+      PUID: 3001
+      PGID: 3001
+      TZ: ${TZ}
     volumes:
-      - jellyfin:/config
+      - ./jellyfin:/config
       - /mnt/torrents/files:/media
     devices:
       - /dev/dri:/dev/dri
@@ -64,6 +64,7 @@ services:
       - "traefik.http.routers.jellyfin.entrypoints=websecure"
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.services.jellyfin.loadBalancer.passHostHeader=true"
       - "com.centurylinklabs.watchtower.enable=true"
 
   filebrowser:
@@ -73,8 +74,8 @@ services:
     networks: [ proxy ]
     volumes:
       - /mnt/torrents:/srv:rw
-      - filebrowser:/.filebrowser.json:/.filebrowser.json
-      - filebrowser:/filebrowser.db:/database.db
+      - ./filebrowser:/.filebrowser.json:/.filebrowser.json
+      - ./filebrowser:/filebrowser.db:/database.db
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
@@ -91,10 +92,4 @@ services:
 
 networks:
   proxy:
-    external: true
-
-volumes:
-  jellyfin:
-    external: true
-  filebrowser:
     external: true
