@@ -1,6 +1,6 @@
 services:
   rtorrent:
-    image: crazymax/rtorrent-rutorrent:latest
+    image: crazymax/rtorrent-rutorrent:4.3.1-0.9.8_3-0.13.8_2
     container_name: rtorrent
     restart: unless-stopped
 
@@ -27,7 +27,7 @@ services:
     volumes:
       - /mnt/torrents/config:/config:ro
       - /mnt/torrents/config/rtorrent/:/data/rtorrent/
-      - /mnt/torrents/session:/data/rtorrent/rtorrent_sess
+      - /mnt/torrents/session:/session
       - /mnt/torrents/watch:/watch
       - /mnt/torrents/files:/files
       - /mnt/torrents/log:/log
@@ -89,6 +89,50 @@ services:
       - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
       - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
       - "com.centurylinklabs.watchtower.enable=true"
+
+  kavita:
+    image: ghcr.io/kareadita/kavita:latest
+    container_name: kavita
+    restart: unless-stopped
+    networks: [ proxy ]
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - /mnt/library/books:/books
+      - ./kavita/config:/kavita/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.kavita.rule=Host(`books.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.entrypoints=websecure"
+      - "traefik.http.routers.kavita.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: unless-stopped
+    networks: [ proxy ]
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - /mnt/archive/library/audio:/audiobooks
+      - ./audiobookshelf/config:/config
+      - ./audiobookshelf/metadata:/metadata
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.audiobookshelf.rule=Host(`audio.${DOMAIN}`)"
+      - "traefik.http.routers.audiobookshelf.entrypoints=websecure"
+      - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
+      - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
+      - "com.centurylinklabs.watchtower.enable=true"
+
 
 networks:
   proxy:
