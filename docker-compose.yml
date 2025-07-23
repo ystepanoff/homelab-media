@@ -3,14 +3,8 @@ services:
     image: crazymax/rtorrent-rutorrent:4.3.1-0.9.8_3-0.13.8_2
     container_name: rtorrent
     restart: unless-stopped
-
-    ports:
-      - "50000:50000/tcp"
-      - "50000:50000/udp"
-
     networks:
       - proxy
-
     environment:
       PUID: 1000
       PGID: 1000
@@ -23,7 +17,10 @@ services:
       RU_DO_DIAGNOSTIC: "false"
       RU_REMOVE_CORE_PLUGINS: "true"
       WAN_IP_CMD: "false"
-
+    ports:
+      - "50000:50000/tcp"
+      - "50000:50000/udp"
+      - "192.168.50.50:8101:80"
     volumes:
       - /mnt/torrents/config:/config:ro
       - /mnt/torrents/config/rtorrent/:/data/rtorrent/
@@ -31,7 +28,6 @@ services:
       - /mnt/torrents/watch:/watch
       - /mnt/torrents/files:/files
       - /mnt/torrents/log:/log
-
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
@@ -39,7 +35,6 @@ services:
       - "traefik.http.routers.rutorrent.entrypoints=websecure"
       - "traefik.http.routers.rutorrent.tls.certresolver=letsencrypt"
       - "traefik.http.services.rutorrent.loadbalancer.server.port=80"
-      - "com.centurylinklabs.watchtower.enable=true"
 
   jellyfin:
     image: jellyfin/jellyfin:latest
@@ -66,6 +61,8 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.services.jellyfin.loadBalancer.passHostHeader=true"
       - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - "192.168.50.50:8096:8096"
 
   filebrowser:
     image: filebrowser/filebrowser:s6
@@ -74,8 +71,8 @@ services:
     networks: [ proxy ]
     volumes:
       - /mnt/torrents:/srv:rw
-      - ./filebrowser:/.filebrowser.json:/.filebrowser.json
-      - ./filebrowser:/filebrowser.db:/database.db
+      - ./filebrowser/.filebrowser.json:/.filebrowser.json
+      - ./filebrowser/filebrowser.db:/database/filebrowser.db
     environment:
       TZ: ${TZ}
       FB_BASEURL: /files
@@ -89,10 +86,12 @@ services:
       - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
       - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
       - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - "192.168.50.50:8102:80"
 
   kavita:
     image: ghcr.io/kareadita/kavita:latest
-    container_name: kavita
+    container_name: kavitax1
     restart: unless-stopped
     networks: [ proxy ]
     environment:
@@ -110,6 +109,8 @@ services:
       - "traefik.http.routers.kavita.tls.certresolver=letsencrypt"
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
       - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - "192.168.50.50:8103:5000"
 
   audiobookshelf:
     image: ghcr.io/advplyr/audiobookshelf:latest
@@ -132,7 +133,8 @@ services:
       - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
       - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
       - "com.centurylinklabs.watchtower.enable=true"
-
+    ports:
+      - "192.168.50.50:8104:80"
 
 networks:
   proxy:
