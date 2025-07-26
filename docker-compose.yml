@@ -91,7 +91,7 @@ services:
 
   kavita:
     image: ghcr.io/kareadita/kavita:latest
-    container_name: kavitax1
+    container_name: kavita
     restart: unless-stopped
     networks: [ proxy ]
     environment:
